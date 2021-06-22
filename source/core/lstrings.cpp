@@ -214,7 +214,7 @@ internal u64 StringCount (String string, String pattern) {
 internal String StringToUpper (String string, M_Arena* arena) {
 	String result = StringCopy(string, arena);
 	for (u32 i = 0; i < string.size; ++i) {
-		// NOTE(bryson): assumes string is composes of only alpha chars, maybe check this?
+		// NOTE(bryson): assumes string is composed of only alpha chars, maybe check this?
 		char* c = &result.data[i];
 		*c &= CharToUpper(*c);
 	}
@@ -225,7 +225,7 @@ internal String StringToUpper (String string, M_Arena* arena) {
 internal String StringToLower (String string, M_Arena* arena) {
 	String result = StringCopy(string, arena);
 	for (u32 i = 0; i < string.size; ++i) {
-		// NOTE(bryson): assumes string is composes of only alpha chars, maybe check this?
+		// NOTE(bryson): assumes string is composed of only alpha chars, maybe check this?
 		char* c = &result.data[i];
 		*c &= CharToLower(*c);
 	}
