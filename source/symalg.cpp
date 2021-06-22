@@ -24,15 +24,15 @@ internal void SetVariable (Context* context, char variable, Symbol value) {
 }
 
 // NOTE(bryson): Constructors
-internal Symbol Set (Symbol lhs, Symbol rhs, b32 persist_data) {
+internal Symbol Def (Symbol lhs, Symbol rhs, b32 persist_data) {
 	Symbol result = {};
 	result.type = SYMBOL_BINOP;
 
 	BinOp* op = (BinOp*) M_ArenaPushZero( (persist_data) ? &program.permanent_memory : &program.transient_memory, sizeof(BinOp));
-	op->operation = BINOP_SET;
+	op->operation = BINOP_DEF;
 	op->lhs = lhs;	
 	op->rhs = rhs;
-	op->associative = true;
+	op->associative = false;
 
 	result.value = op;
 	return result;
@@ -153,7 +153,7 @@ internal String BinOpToString (BinOp* binop) {
 		case BINOP_EXP: {
 			StringBuilderAppend(&builder, MakeString("^"));
 		} break;
-		case BINOP_SET: {
+		case BINOP_DEF: {
 			StringBuilderAppend(&builder, MakeString(" = "));
 		} break;
 	}
@@ -216,7 +216,7 @@ internal Symbol EvaluateBinOp (BinOp* binop, Context* context, b32 persist_data)
 	Symbol elhs = {};
 	Symbol erhs = {};
 
-	if (binop->operation == BINOP_SET) {
+	if (binop->operation == BINOP_DEF) {
 		// Assuming lhs is simply a variable
 		elhs = binop->lhs;
 		persist_data = true; 
@@ -242,9 +242,9 @@ internal Symbol EvaluateBinOp (BinOp* binop, Context* context, b32 persist_data)
 		case BINOP_EXP: {
 			result = Exp(elhs, erhs, persist_data);
 		} break;
-		case BINOP_SET: {
+		case BINOP_DEF: {
 			if (elhs.type == SYMBOL_VARIABLE) {
-				result = Set(elhs, erhs, persist_data); 
+				result = Def(elhs, erhs, persist_data); 
 				SetVariable(context, CharCast(&elhs), erhs);
 			}
 		} break;
@@ -301,7 +301,6 @@ internal Symbol SimplifyBinOp (BinOp* binop) {
 				result = Sub(SimplifySymbol(&slhs), SimplifySymbol(&srhs), false);
 			}
 		} break;
-
 		case BINOP_ADD: {
 			if (lhsn && rhsn) {
 				// Ex: 1 + 1
@@ -319,7 +318,6 @@ internal Symbol SimplifyBinOp (BinOp* binop) {
 				result = Add(SimplifySymbol(&slhs), SimplifySymbol(&srhs), false);
 			}
 		} break;
-
 		case BINOP_DIV: {
 			if (lhsn && rhsn) {
 				// Ex: 1 / 1
@@ -337,7 +335,6 @@ internal Symbol SimplifyBinOp (BinOp* binop) {
 				result = Div(SimplifySymbol(&slhs), SimplifySymbol(&srhs), false);
 			}
 		} break;
-
 		case BINOP_MUL: {
 			if (lhsn && rhsn) {
 				// Ex: 1 * 1
@@ -380,8 +377,8 @@ internal Symbol SimplifyBinOp (BinOp* binop) {
 				result = Exp(SimplifySymbol(&slhs), SimplifySymbol(&srhs), false);
 			}
 		} break;
-		case BINOP_SET: {
-			result = Set(slhs, srhs, false);
+		case BINOP_DEF: {
+			result = Def(slhs, srhs, false);
 		} break;
 	}
 
@@ -510,7 +507,7 @@ internal DescentParseData Parse (TokenArray* arr, u32 index, b32 persist_data) {
 				curr_parse.symbol = Exp(left.symbol, right.symbol, persist_data);
 			} break;
 			case '=': {
-				curr_parse.symbol = Set(left.symbol, right.symbol, persist_data);
+				curr_parse.symbol = Def(left.symbol, right.symbol, persist_data);
 			} break;
 		}
 	}

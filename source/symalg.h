@@ -19,7 +19,7 @@ typedef struct Symbol {
 } Symbol;
 
 typedef enum BinOpType {
-	BINOP_SET,
+	BINOP_DEF,
 	BINOP_SUB,
 	BINOP_ADD,
 	BINOP_DIV,

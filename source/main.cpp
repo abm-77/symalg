@@ -46,13 +46,16 @@ int main (void) {
 
 		// NOTE(bryson): Stop the program.
 		if (StringMatch(StringToUpper(expression, &program.transient_memory), MakeString("QUIT\n"))) {
+			printf(">> Quitting...\n");
 			program.running = false;
 		}
 
 		// NOTE(bryson): Clear all stored varaibles. Effectively clears permanent program memory.
 		else if (StringMatch(StringToUpper(expression, &program.transient_memory), MakeString("CLEAR\n"))) {
+			printf(">> Clearing stored variables...\n");
 			program.context.clear();
 			M_ArenaPopTo(&program.permanent_memory, 0);
+			NEW_LINE;
 		}
 
 		// NOTE(bryson): Parse user input.

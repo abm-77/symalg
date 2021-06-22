@@ -1,2 +1,4 @@
 .vscode
 ./build
+./bin/application.ilk
+./bin/application.pdb
