@@ -2,7 +2,10 @@
 This is a symbolic algebra calculator written in "C-like" C++. 
 
 Q: What is "C-like" C++? 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5880071895b98c398a6e13e7d8cd6c110aa9342d
 A: Essentially I tried to limit the number of C++ features I used. The main features I took advantage of in this program were maps (which I might implement from scratch in the future) and lambdas (as closures).
 
 Currently the project is set to build on windows, but with a few minor adjustments (switching the underlying arena allocators to use other allocator instead of VirtualAlloc), it can be ported to most other operating systems. An executable file is included in the bin folder.
